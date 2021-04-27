@@ -52,22 +52,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
-      # Added to my fork - KDSS
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
+      # Added to my fork - KDS - commenting out for now
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: us-east-2
 
-      - name: Download S3 instrumentation jar zip
-        run: aws s3 cp s3://nr-java-agent-s3-instrumentation/proprietary-jars-20200717.zip proprietary-jars.zip
+      # - name: Download S3 instrumentation jar zip
+      #   run: aws s3 cp s3://nr-java-agent-s3-instrumentation/proprietary-jars-20200717.zip proprietary-jars.zip
 
-      - name: Unzip the instrumentation jars
-        run: unzip proprietary-jars.zip
+      # - name: Unzip the instrumentation jars
+      #   run: unzip proprietary-jars.zip
 
       - name: Review project workspace
         run: |
+          printenv
           cd ${GITHUB_WORKSPACE}
           ls -la
           cd $HOME 
