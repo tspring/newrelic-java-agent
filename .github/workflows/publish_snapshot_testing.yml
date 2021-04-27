@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-java@v1.4.3
         with:
           java-version: 8
-          
+
       - name: save JAVA_HOME as JDK8 for later usage
         run: echo "ORG_GRADLE_PROJECT_jdk8=$JAVA_HOME" >> $GITHUB_ENV
 
@@ -52,6 +52,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
+      # Added to my fork - KDSS
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -64,6 +65,13 @@ jobs:
 
       - name: Unzip the instrumentation jars
         run: unzip proprietary-jars.zip
+
+      - name: Review project workspace
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          ls -la
+
+      ### KDS Review build for the publich command below###
       # - name: Log jars are in target libs
       #   run: find instrumentation -name "*.jar"
       # - name: Publish snapshot
