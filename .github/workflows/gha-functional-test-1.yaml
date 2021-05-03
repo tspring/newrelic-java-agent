@@ -88,5 +88,5 @@ jobs:
       # GHA checking gradle tasks, etc.
       - name: Checking Gradle projects and tasks
         run: |
-          ./gradle projects
-          ./gradle tasks
+          ./gradlew projects
+          ./gradlew tasks
