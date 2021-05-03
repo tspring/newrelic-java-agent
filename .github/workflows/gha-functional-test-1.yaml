@@ -1,4 +1,4 @@
-name: GHA Migration - PR Build  (using push for testing) - Unit Tests
+name: GHA Migration - PR Build  (using push for testing) - Functional Tests
 
 on:
   # pull_request:
@@ -82,8 +82,8 @@ jobs:
 
       # GHA run unit tests and determine if both versions built prior are tested for.
       # Start running the build.
-      # - name: run the unit tests
-      #   run: ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
+      # - name: run the functional tests
+      #   run: ./gradlew --console=plain --parallel functional_test:test --continue
 
       # GHA checking gradle tasks, etc.
       - name: Checking Gradle projects and tasks
