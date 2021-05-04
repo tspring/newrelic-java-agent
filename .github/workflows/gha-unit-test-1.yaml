@@ -110,8 +110,9 @@ jobs:
       #   run: ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
 
       # GHA run a test on specific module to expedite workflow run
-      - name: run a test on a sinlge module
+      - name: run a test on a single module
         run: |
+          java -version
           ./gradlew --console=plain instrumentation:okhttp-4.4.0:tasks
           ./gradlew --console=plain instrumentation:okhttp-4.4.0:test
 
