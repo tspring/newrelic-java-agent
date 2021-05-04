@@ -96,12 +96,12 @@ jobs:
           printenv
 
       # GHA checking gradle tasks, etc.
-      - name: Checking Gradle projects and tasks
-        run: |
-          gradle --version
-          ./gradlew projects
-          ./gradlew tasks
-          ./gradlew :instrumentation:aws-wrap-0.7.0:tasks
+      # - name: Checking Gradle projects and tasks
+      #   run: |
+      #     gradle --version
+      #     # ./gradlew projects
+      #     # ./gradlew tasks
+      #     ./gradlew :instrumentation:aws-wrap-0.7.0:tasks
 
 
       # GHA run unit tests and determine if both versions built prior are tested for.
@@ -112,10 +112,11 @@ jobs:
       # GHA run a test on specific module to expedite workflow run
       - name: run a test on a sinlge module
         run: |
-          ./gradlew instrumentation:akka-http-core-10.0:test
+          ./gradlew --console=plain instrumentation:okhttp-4.4.0:tasks
+          ./gradlew --console=plain instrumentation:okhttp-4.4.0:test
 
       # GHA run a test on specific module with a specific version of java
       # - name: run a test on a sinlge module
       #   run: |
-      #     ./gradlew instrumentation:akka-http-core-10.0:test
+      #     ./gradlew -Ptest9 --console=plain instrumentation:okhttp-4.4.0:test
 
