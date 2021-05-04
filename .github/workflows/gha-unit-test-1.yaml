@@ -88,6 +88,7 @@ jobs:
       # GHA checking gradle tasks, etc.
       - name: Checking Gradle projects and tasks
         run: |
+          gradle --version
           ./gradlew projects
           ./gradlew tasks
           ./gradlew :instrumentation:aws-wrap-0.7.0:tasks
