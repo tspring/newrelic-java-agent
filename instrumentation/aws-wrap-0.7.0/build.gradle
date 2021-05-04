@@ -3,7 +3,7 @@ apply plugin: 'scala'
 repositories {
   maven {
     // repo for aws-wrap
-    //Below is no longer available
+    //Below is no longer available (dl.bintray...)
     //url 'https://dl.bintray.com/dwhjames/maven'
     url 'https://mvnrepository.com/artifact/com.github.dwhjames/aws-wrap'
 
@@ -16,7 +16,9 @@ dependencies {
   implementation(project(":newrelic-weaver-api"))
   implementation(project(":newrelic-weaver-scala-api"))
   // https://dl.bintray.com/dwhjames/maven/com/github/dwhjames/aws-wrap_2.10/0.8.0/aws-wrap_2.10-0.8.0.jar
-  implementation("com.github.dwhjames:aws-wrap_2.10:0.8.0")
+  //implementation("com.github.dwhjames:aws-wrap_2.10:0.8.0")
+  //GHA trying the implementation below:
+  implementation group: 'com.github.dwhjames', name: 'aws-wrap_2.11', version: '0.11.0'
   implementation("org.scala-lang:scala-library:2.10.7")
 
   testImplementation("com.amazonaws:aws-java-sdk:1.10.64")
