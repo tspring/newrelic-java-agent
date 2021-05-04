@@ -3,7 +3,10 @@ apply plugin: 'scala'
 repositories {
   maven {
     // repo for aws-wrap
-    url 'https://dl.bintray.com/dwhjames/maven'
+    //Below is no longer available
+    //url 'https://dl.bintray.com/dwhjames/maven'
+    url 'https://mvnrepository.com/artifact/com.github.dwhjames/aws-wrap'
+
   }
 }
 
