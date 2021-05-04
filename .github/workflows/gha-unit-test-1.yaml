@@ -106,6 +106,16 @@ jobs:
 
       # GHA run unit tests and determine if both versions built prior are tested for.
       # Start running the build.
-      - name: run the unit tests
-        run: ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
+      # - name: run the unit tests
+      #   run: ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
+
+      # GHA run a test on specific module to expedite workflow run
+      - name: run a test on a sinlge module
+        run: |
+          ./gradlew instrumentation:akka-http-core-10.0:test
+
+      # GHA run a test on specific module with a specific version of java
+      # - name: run a test on a sinlge module
+      #   run: |
+      #     ./gradlew instrumentation:akka-http-core-10.0:test
 
