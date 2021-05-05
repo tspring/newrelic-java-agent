@@ -8,7 +8,7 @@ on:
     branches: [ testing ]
 
 jobs:
-  unit_test_1.8:
+  unit_test_1_8:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -63,7 +63,7 @@ jobs:
         run: |
           ./gradlew --console=plain instrumentation:okhttp-4.4.0:test
   
-  unit_test_1.9:
+  unit_test_1_9:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
