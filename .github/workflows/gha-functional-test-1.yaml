@@ -73,7 +73,7 @@ jobs:
 
       # GHA Set the JDK to be used for the test
       - name: correct JAVA_HOME
-        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk8" >> $GITHUB_ENV
+        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk9" >> $GITHUB_ENV
 
       # Restore the gradle cache
       - uses: actions/cache@v2
@@ -96,11 +96,11 @@ jobs:
 
       # GHA run unit tests and determine if both versions built prior are tested for.
       # Start running the build.
-      # - name: run the functional tests
-      #   run: ./gradlew --console=plain --parallel functional_test:test --continue
+      - name: run the functional tests
+        run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue
 
       # GHA checking gradle tasks, etc.
-      - name: Checking Gradle projects and tasks
-        run: |
-          ./gradlew projects
-          ./gradlew tasks
+      # - name: Checking Gradle projects and tasks
+      #   run: |
+      #     ./gradlew projects
+      #     ./gradlew tasks
