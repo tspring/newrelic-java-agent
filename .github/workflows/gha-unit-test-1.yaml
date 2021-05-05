@@ -119,5 +119,6 @@ jobs:
       # GHA run a test on specific module with a specific version of java
       - name: run a test on a single module
         run: |
+          ls -la /Library/Java/JavaVirtualMachines
           ./gradlew -Ptest9 --console=plain instrumentation:okhttp-4.4.0:test
 
