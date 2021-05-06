@@ -1,4 +1,4 @@
-name: GHA Migration - PR Build  (using push for testing) - Functional Tests
+name: GHA Migration - Functional Tests
 
 on:
   # pull_request:
@@ -96,12 +96,12 @@ jobs:
 
       # GHA run unit tests and determine if both versions built prior are tested for.
       # Start running the build.
-      - name: run the functional tests
+      - name: run the functional tests with java 9 assumed (how to confirm?)
         run: |
           whereis java
           java -version 
-          ./gradlew --console=plain functional_test:tasks
-          #./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue 
+          # ./gradlew --console=plain functional_test:tasks
+          ./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue 
         # run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue ## This command does NOT prevent instrumentation test from running.  Are they running by default?
 
       # GHA checking gradle tasks, etc.

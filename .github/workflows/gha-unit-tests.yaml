@@ -1,5 +1,5 @@
 ## Unti tests for all Java versions: current strategy: jobs per version.  All will run concurrently.
-name: GHA Migration - PR Build  (using push for testing) - Unit Tests for all Java versions
+name: GHA Migration - Unit Tests for all Java versions
 
 on:
   # pull_request:
@@ -59,9 +59,9 @@ jobs:
             ${{ runner.os }}-gradle
 
       # GHA run a test on specific module with a specific version of java
-      - name: run a test on a single module
+      - name: run unit test only - version 8 assumed
         run: |
-          ./gradlew --console=plain instrumentation:okhttp-4.4.0:test
+          ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
   
   unit_test_1_9:
     runs-on: ubuntu-latest
@@ -124,7 +124,7 @@ jobs:
             ${{ runner.os }}-gradle
 
       # GHA run a test on specific module with a specific version of java
-      - name: run a test on a single module
+      - name: run unit tests only java 9 assumed
         run: |
-          # ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
-          ./gradlew --scan --console=plain --parallel clean test instrumentation:okhttp-4.4.0:test -x functional_test:test -PnoInstrumentation --continue
+          ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
+          # ./gradlew --scan --console=plain --parallel clean test instrumentation:okhttp-4.4.0:test -x functional_test:test -PnoInstrumentation --continue

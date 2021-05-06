@@ -8,7 +8,7 @@ on:
     branches: [ testing ]
 
 jobs:
-  functional_test:
+  instrumentation_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -97,7 +97,7 @@ jobs:
 
       # GHA run unit tests and determine if both versions built prior are tested for.
       # Start running the build.
-      - name: run the functional tests
+      - name: run instrumentation tests
         run: |
           whereis java
           java -version 
