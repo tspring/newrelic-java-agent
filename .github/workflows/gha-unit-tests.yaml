@@ -24,25 +24,27 @@ jobs:
         run: echo "ORG_GRADLE_PROJECT_jdk8=$JAVA_HOME" >> $GITHUB_ENV
 
       # The second JDK is not first in the path but does reset JAVA_HOME
-      - name: Set up JDK 1.7
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 7
+      # - name: Set up JDK 1.7
+      #   uses: actions/setup-java@v1.4.3
+      #   with:
+      #     java-version: 7
 
-      - name: save JAVA_HOME as JDK7 for later usage
-        run: echo "ORG_GRADLE_PROJECT_jdk7=$JAVA_HOME" >> $GITHUB_ENV
+      # - name: save JAVA_HOME as JDK7 for later usage
+      #   run: echo "ORG_GRADLE_PROJECT_jdk7=$JAVA_HOME" >> $GITHUB_ENV
 
       # GHA checking all available JDKs and paths
       # Java is installed; document settings
       - name: log project settings
         run: |
           echo "--- Java versions ---"
-          $ORG_GRADLE_PROJECT_jdk7/bin/java -version
+          # $ORG_GRADLE_PROJECT_jdk7/bin/java -version
           $ORG_GRADLE_PROJECT_jdk8/bin/java -version
 
       # GHA Set the JDK to be used for the test?  Need to confirm
-      - name: correct JAVA_HOME
-        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk8" >> $GITHUB_ENV
+      # THIS DOES NOT WORK.  APPARENTLY THE LAST VERSION INSTALLED BY actions/setup-java@v1.4.3 IS RETURNED BY JAVA -VERSION
+      # TESTING REMOVAL OF J7 ABOVE
+      # - name: correct JAVA_HOME
+      #   run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk8" >> $GITHUB_ENV
 
       # Restore the gradle cache
       - uses: actions/cache@v2
@@ -108,8 +110,9 @@ jobs:
           $ORG_GRADLE_PROJECT_jdk9/bin/java -version
 
       # GHA Set the JDK to be used for the test?  Need to confirm
-      - name: correct JAVA_HOME
-        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk9" >> $GITHUB_ENV
+      # Removing to test observation in builds about java -version
+      # - name: correct JAVA_HOME
+      #   run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk9" >> $GITHUB_ENV
 
       # Restore the gradle cache
       - uses: actions/cache@v2
