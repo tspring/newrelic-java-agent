@@ -101,7 +101,10 @@ jobs:
           whereis java
           java -version 
           # ./gradlew --console=plain functional_test:tasks
-          ./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue 
+          ./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue --debug
+          ## Testing in another way for a different Java version:
+          echo "-Dorg.gradle.java.home= " ${ORG_GRADLE_PROJECT_jdk9}
+          ./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9}/bin/java --console=plain --parallel functional_test:test -PnoInstrumentation --continue --debug
         # run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue ## This command does NOT prevent instrumentation test from running.  Are they running by default?
 
       # GHA checking gradle tasks, etc.
