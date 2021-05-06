@@ -1,4 +1,5 @@
-name: GHA Migration - PR Build  (using push for testing) - Functional Tests
+## GHA Instrumentation testing
+name: GHA Migration - Instrumentation Tests
 
 on:
   # pull_request:
@@ -73,7 +74,7 @@ jobs:
 
       # GHA Set the JDK to be used for the test
       - name: correct JAVA_HOME
-        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk8" >> $GITHUB_ENV
+        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk9" >> $GITHUB_ENV
 
       # Restore the gradle cache
       - uses: actions/cache@v2
@@ -100,8 +101,7 @@ jobs:
         run: |
           whereis java
           java -version 
-          ./gradlew --console=plain functional_test:tasks
-          #./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue 
+          ./gradlew --console=plain instrumentation:test --continue 
         # run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue ## This command does NOT prevent instrumentation test from running.  Are they running by default?
 
       # GHA checking gradle tasks, etc.
