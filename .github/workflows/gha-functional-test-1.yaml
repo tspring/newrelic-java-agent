@@ -73,7 +73,7 @@ jobs:
 
       # GHA Set the JDK to be used for the test
       - name: correct JAVA_HOME
-        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk9" >> $GITHUB_ENV
+        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk8" >> $GITHUB_ENV
 
       # Restore the gradle cache
       - uses: actions/cache@v2
