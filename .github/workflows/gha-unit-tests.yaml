@@ -61,6 +61,8 @@ jobs:
       # GHA run a test on specific module with a specific version of java
       - name: run unit test only - version 8 assumed
         run: |
+          whereis java
+          java -version
           ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
   
   unit_test_1_9:
@@ -126,5 +128,7 @@ jobs:
       # GHA run a test on specific module with a specific version of java
       - name: run unit tests only java 9 assumed
         run: |
+          whereis java
+          java -version
           ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue
           # ./gradlew --scan --console=plain --parallel clean test instrumentation:okhttp-4.4.0:test -x functional_test:test -PnoInstrumentation --continue
