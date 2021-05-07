@@ -46,12 +46,15 @@ jobs:
         with:
           java-version: ${{ matrix.java-version }}
 
+      - name: save JAVA_HOME as JDK${{ matrix.java-version }} for later usage
+        run: echo "ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}=$JAVA_HOME" >> $GITHUB_ENV
+
       # Check $JAVA_HOME
       - name: Check "$JAVA_HOME"
         run: |
           echo "Current $JAVA_HOME = " ${JAVA_HOME}
-      # - name: save JAVA_HOME as JDK8 for later usage
-      #   run: echo "ORG_GRADLE_PROJECT_jdk8=$JAVA_HOME" >> $GITHUB_ENV
+
+
 
       # # The second JDK is not first in the path but does reset JAVA_HOME
       # - name: Set up JDK 1.7
