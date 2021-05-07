@@ -30,6 +30,12 @@ jobs:
       # 4. log project settings
       # 5. run the unit tests.
 
+      # Need Java 8 for all tests
+      - name: Set up Java 8
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 8
+
       # Concurrent install of all Java versions
       - name: Set up Java ${{ matrix.java-version }}
         uses: actions/setup-java@v1.4.3
