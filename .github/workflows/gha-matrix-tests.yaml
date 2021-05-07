@@ -156,7 +156,7 @@ jobs:
     needs: matrix_test
     runs-on: ubuntu-latest
     steps:
-      - name: Check that all the Java versions are installed
+     -name: Check that all the Java versions are installed
       run: |
         whereis java
 
