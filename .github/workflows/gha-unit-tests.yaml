@@ -65,7 +65,7 @@ jobs:
         run: |
           whereis java
           java -version
-          ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue --debug
+          ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue --info
   
   unit_test_1_9:
     runs-on: ubuntu-latest
@@ -125,5 +125,5 @@ jobs:
           whereis java
           java -version
           # ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue --debug
-          ./gradlew --console=plain --parallel clean test -x -Ptest9 functional_test:test -PnoInstrumentation --continue --debug
+          ./gradlew  -Ptest9 --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation --continue --info
           # ./gradlew --scan --console=plain --parallel clean test instrumentation:okhttp-4.4.0:test -x functional_test:test -PnoInstrumentation --continue
