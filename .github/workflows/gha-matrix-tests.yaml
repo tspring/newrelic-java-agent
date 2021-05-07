@@ -118,7 +118,7 @@ jobs:
 
       # GHA run unit tests and determine if both versions built prior are tested for.
       # Start running the build.
-      - name: checking Java version and gradle functional_test tasks
+      - name: checking Java version and gradle functional_test tasks - no java version specified
         run: |
           ##whereis java
           java -version 
@@ -126,7 +126,25 @@ jobs:
           ##./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue --debug
           ## Testing in another way for a different Java version:
           ##echo "-Dorg.gradle.java.home= " ${JAVA_HOME}
-          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} --console=plain functional_test:tasks --info
+          ./gradlew --console=plain functional_test:tasks --info          
+          ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain --parallel functional_test:test -PnoInstrumentation --continue --info
+        # run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue ## This command does NOT prevent instrumentation test from running.  Are they running by default?
+
+
+      # Start running the build.
+      - name: checking Java version and gradle functional_test tasks - testing with -Dorg.gradle.java.home
+        run: |
+          java -version
+          ./gradlew -Dorg.gradle.java.home=${JAVA_HOME} --console=plain functional_test:tasks --info          
+          ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain --parallel functional_test:test -PnoInstrumentation --continue --info
+        # run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue ## This command does NOT prevent instrumentation test from running.  Are they running by default?
+
+
+      # Start running the build.
+      - name: checking Java version and gradle functional_test tasks - testing with PtestN
+        run: |
+          java -version
+          ./gradlew -Ptest${{ matrix.java-version }} --console=plain functional_test:tasks --info          
           ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain --parallel functional_test:test -PnoInstrumentation --continue --info
         # run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue ## This command does NOT prevent instrumentation test from running.  Are they running by default?
 
