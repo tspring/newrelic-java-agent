@@ -156,9 +156,9 @@ jobs:
     needs: matrix_test
     runs-on: ubuntu-latest
     steps:
-     -name: Check that all the Java versions are installed
-      run: |
-        whereis java
+        - name: Check that all the Java versions are installed
+          run: |
+            whereis java
 
 
       # GHA checking gradle tasks, etc.
