@@ -35,10 +35,11 @@ jobs:
         uses: actions/setup-java@v1.4.3
         with:
           java-version: ${{ matrix.java-version }}
-      # # Check $JAVA_HOME
-      # - name: Check "$JAVA_HOME"
-      #   run: |
-      #     echo "Current $JAVA_HOME = " ${JAVA_HOME}
+          
+      # Check $JAVA_HOME
+      - name: Check "$JAVA_HOME"
+        run: |
+          echo "Current $JAVA_HOME = " ${JAVA_HOME}
       # - name: save JAVA_HOME as JDK8 for later usage
       #   run: echo "ORG_GRADLE_PROJECT_jdk8=$JAVA_HOME" >> $GITHUB_ENV
 
