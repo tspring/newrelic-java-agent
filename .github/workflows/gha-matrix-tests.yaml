@@ -62,6 +62,7 @@ jobs:
           ls -la
           mkdir test-cache-dir
           touch test-cache-dir/test.txt
+          ls -la 
 
 
       # Restore the gradle cache
@@ -89,7 +90,7 @@ jobs:
           ls -la 
           java -version
           echo "The PATH variable is now set to " $PATH 
-          ##./gradlew --console=plain functional_test:tasks
+          ##./gradlew -Ptest${{ matrix.java-version }} --console=plain functional_test:tasks  ## Checking for module dependencies 
           ##./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue --debug
           ## Testing in another way for a different Java version:
           ##echo "-Dorg.gradle.java.home= " ${JAVA_HOME}
