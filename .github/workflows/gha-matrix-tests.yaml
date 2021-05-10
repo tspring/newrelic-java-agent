@@ -128,8 +128,9 @@ jobs:
           pwd
           ls -la 
           java -version
-          echo "The PATH variable is now set to " $PATH 
-          ./gradlew -Ptest${{ matrix.java-version }} --console=plain functional_test:tasks --info  ## Checking for module dependencies 
+          echo "The PATH variable is now set to " $PATH
+          ./gradlew --parallel newrelic-agent:test --tests com.newrelic.agent.jfr.JfrServiceTest -x functional_test:test -PnoInstrumentation -Ptest${{ matrix.java-version }} --continue --info
+          ##./gradlew -Ptest${{ matrix.java-version }} --console=plain functional_test:tasks --info  ## Checking for module dependencies 
           ##./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue --debug
           ## Testing in another way for a different Java version:
           ##echo "-Dorg.gradle.java.home= " ${JAVA_HOME}
