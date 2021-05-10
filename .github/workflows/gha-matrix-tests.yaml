@@ -54,6 +54,10 @@ jobs:
         run: |
           echo "Current $JAVA_HOME = " ${JAVA_HOME}
 
+      ## NEW CACHE FOR JDKS HERE
+      ## So the hosted_tool_cacahe/jdk already has these versions.
+
+
       # Restore the gradle cache
       - name: Restore the gradle caches
         uses: actions/cache@v2
@@ -69,15 +73,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
-      # # GHA Testing
-      # - name: Check all environmental variables
-      #   run: |
-      #     printenv
-
-      # # GHA Testing
-      # - name: Check Java 9 path
-      #   run: |
-      #     echo "jdk 9 path is " ${ORG_GRADLE_PROJECT_jdk9}
 
       # GHA run unit tests and determine if both versions built prior are tested for.
       # Start running the build.
@@ -86,8 +81,9 @@ jobs:
           whereis java
           pwd
           ls -la 
-          java -version 
-          # ./gradlew --console=plain functional_test:tasks
+          java -version
+          echo "The PATH variable is now set to " $PATH 
+          ##./gradlew --console=plain functional_test:tasks
           ##./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue --debug
           ## Testing in another way for a different Java version:
           ##echo "-Dorg.gradle.java.home= " ${JAVA_HOME}
@@ -114,7 +110,7 @@ jobs:
         # run: ./gradlew -Ptest9 --console=plain --parallel functional_test:test --continue ## This command does NOT prevent instrumentation test from running.  Are they running by default?
 
 
-  testing_job_dependence:
+  testing_job_dependence: ## ORG_GRADLE_PROJECT_jdk will have to be set for all versions
     needs: matrix_test
     runs-on: ubuntu-latest
     steps:
