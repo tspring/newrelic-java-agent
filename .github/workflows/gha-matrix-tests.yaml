@@ -83,7 +83,7 @@ jobs:
       # Start running the build.
       - name: checking Java version and gradle functional_test tasks - no java version specified
         run: |
-          ##whereis java
+          whereis java
           pwd
           ls -la 
           java -version 
