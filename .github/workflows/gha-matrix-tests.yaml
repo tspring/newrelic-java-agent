@@ -61,8 +61,10 @@ jobs:
           pwd
           ls -la
           mkdir test-cache-dir
-          touch test-cache-dir/test.txt
-          ls -la 
+          touch test-cache-dir/ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}.txt
+          ls -la
+          cd test-cache-dir
+          ls -la
 
 
       # Restore the gradle cache
