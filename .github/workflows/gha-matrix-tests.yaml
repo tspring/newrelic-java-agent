@@ -8,10 +8,10 @@ on:
     branches: [ testing ]
 
 jobs:
-  matrix_test:
+  matrix_test:  ## Determine the module dependencies, why are we seeing errors for version not tested?
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1 ## force sequential?
+      ##max-parallel: 1 ## force sequential?
       fail-fast: false
       matrix:
         java-version: [9, 10, 11, 12, 13, 14, 15]
@@ -55,42 +55,42 @@ jobs:
         run: |
           echo "Current $JAVA_HOME = " ${JAVA_HOME}
 
-      ## NEW CACHE FOR JDKS HERE
-      ## So the hosted_tool_cache/jdk already has these versions.
-      - name: Touch a file and saved to cached directory
-        run: |
-          pwd
-          ls -la
-          mkdir test-cache-dir
-          touch test-cache-dir/ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}.txt
-          ##touch test-cache-dir/${JAVA_HOME}.txt
-          ls -la
-          cd test-cache-dir
-          ls -la
-          cd ../
-          pwd
-          ls -la 
+      # ## NEW CACHE FOR JDKS HERE
+      # ## So the hosted_tool_cache/jdk already has these versions.
+      # - name: Touch a file and saved to cached directory
+      #   run: |
+      #     pwd
+      #     ls -la
+      #     mkdir test-cache-dir
+      #     touch test-cache-dir/ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}.txt
+      #     ##touch test-cache-dir/${JAVA_HOME}.txt
+      #     ls -la
+      #     cd test-cache-dir
+      #     ls -la
+      #     cd ../
+      #     pwd
+      #     ls -la 
 
-      - name: Cache test directory 
-        ##id: cache-directory
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-test-dir
-        with:
-          path: test-cache-dir
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.txt') }}
-          # restore-keys: |
-          #   ${{ runner.os }}-build-${{ env.cache-name }}-
-          #   ${{ runner.os }}-build-
-          #   ${{ runner.os }}-
+      # - name: Cache test directory 
+      #   ##id: cache-directory
+      #   uses: actions/cache@v2
+      #   env:
+      #     cache-name: cache-test-dir
+      #   with:
+      #     path: test-cache-dir
+      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.txt') }}
+      #     # restore-keys: |
+      #     #   ${{ runner.os }}-build-${{ env.cache-name }}-
+      #     #   ${{ runner.os }}-build-
+      #     #   ${{ runner.os }}-
 
 
-      ## NEW CACHE FOR JDKS HERE
-      - name: List items in testing cached directory
-        run: |
-          cd test-cache-dir
-          ls -la
-          cd ../
+      # ## NEW CACHE FOR JDKS HERE
+      # - name: List items in testing cached directory
+      #   run: |
+      #     cd test-cache-dir
+      #     ls -la
+      #     cd ../
 
 
       # Restore the gradle cache
@@ -118,7 +118,7 @@ jobs:
           ls -la 
           java -version
           echo "The PATH variable is now set to " $PATH 
-          ##./gradlew -Ptest${{ matrix.java-version }} --console=plain functional_test:tasks  ## Checking for module dependencies 
+          ./gradlew -Ptest${{ matrix.java-version }} --console=plain functional_test:tasks  ## Checking for module dependencies 
           ##./gradlew -Ptest9 --console=plain --parallel functional_test:test -PnoInstrumentation --continue --debug
           ## Testing in another way for a different Java version:
           ##echo "-Dorg.gradle.java.home= " ${JAVA_HOME}
@@ -148,20 +148,26 @@ jobs:
   testing_job_dependence: ## ORG_GRADLE_PROJECT_jdk will have to be set for all versions
     needs: matrix_test
     runs-on: ubuntu-latest
-    steps:       
-        
-        - name: Cache test directory 
-          ##id: cache-directory
-          uses: actions/cache@v2
-          env:
-            cache-name: cache-test-dir
-          with:
-            path: test-cache-dir
-            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.txt') }}
-            restore-keys: |
-              ${{ runner.os }}-build-${{ env.cache-name }}-
-              ${{ runner.os }}-build-
-              ${{ runner.os }}-
+    steps:        
+        # - name: Cache test directory 
+        #   ##id: cache-directory
+        #   uses: actions/cache@v2
+        #   env:
+        #     cache-name: cache-test-dir
+        #   with:
+        #     path: test-cache-dir
+        #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.txt') }}
+        #     restore-keys: |
+        #       ${{ runner.os }}-build-${{ env.cache-name }}-
+        #       ${{ runner.os }}-build-
+        #       ${{ runner.os }}-
+
+        # ## NEW CACHE FOR JDKS HERE
+        # - name: List items in testing cached directory
+        #   run: |
+        #     cd test-cache-dir
+        #     ls -la
+        #     cd ../
 
         # Restore the gradle cache
         - name: Restore the gradle caches
