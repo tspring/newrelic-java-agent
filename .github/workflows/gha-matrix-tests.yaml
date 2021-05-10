@@ -79,10 +79,10 @@ jobs:
         with:
           path: test-cache-dir
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          # restore-keys: |
+          #   ${{ runner.os }}-build-${{ env.cache-name }}-
+          #   ${{ runner.os }}-build-
+          #   ${{ runner.os }}-
 
 
       ## NEW CACHE FOR JDKS HERE
