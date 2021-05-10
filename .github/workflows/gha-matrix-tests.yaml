@@ -55,7 +55,13 @@ jobs:
           echo "Current $JAVA_HOME = " ${JAVA_HOME}
 
       ## NEW CACHE FOR JDKS HERE
-      ## So the hosted_tool_cacahe/jdk already has these versions.
+      ## So the hosted_tool_cache/jdk already has these versions.
+      - name: Touch a file and saved to cached directory
+        run: |
+          pwd
+          ls -la
+          mkdir test-cache-dir
+          touch test-cache-dir/test.txt
 
 
       # Restore the gradle cache
