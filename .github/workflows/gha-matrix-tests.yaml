@@ -62,7 +62,7 @@ jobs:
           ls -la
           mkdir test-cache-dir
           touch test-cache-dir/ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}.txt
-          touch test-cache-dir/${JAVA_HOME}.txt
+          ##touch test-cache-dir/${JAVA_HOME}.txt
           ls -la
           cd test-cache-dir
           ls -la
