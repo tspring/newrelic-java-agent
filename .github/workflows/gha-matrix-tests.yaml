@@ -41,6 +41,17 @@ jobs:
       - name: save JAVA_HOME as JDK8 for later usage
         run: echo "ORG_GRADLE_PROJECT_jdk8=$JAVA_HOME" >> $GITHUB_ENV
 
+
+      # Need Java 10 for all tests: Getting an error even when specificying jdk version that we need 10
+      - name: Set up Java 8
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 10
+
+      # add jdk8 to environmental variables
+      - name: save JAVA_HOME as JDK10 for later usage
+        run: echo "ORG_GRADLE_PROJECT_jdk10=$JAVA_HOME" >> $GITHUB_ENV
+
       # Concurrent install of all Java versions
       - name: Set up Java ${{ matrix.java-version }}
         uses: actions/setup-java@v1.4.3
