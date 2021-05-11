@@ -1,5 +1,5 @@
-## Matrix strategy test for unit testing
-name: GHA Migration - strategy.matrix Unit Tests 2
+## Matrix strategy test for Functional Tests
+name: GHA Migration - strategy.matrix Functional Tests
 
 on:
   # pull_request:
@@ -8,7 +8,7 @@ on:
     branches: [ testing ]
 
 jobs:
-  matrix_unit_test:  ## Determine the module dependencies, why are we seeing errors for version not tested?
+  matrix_functional_all_versions:
     runs-on: ubuntu-latest
     strategy:
       ##max-parallel: 1 ## used to force sequential
@@ -80,20 +80,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
-      # GHA run unit tests
+
+      # GHA run functional tests
       # Run the build.
-      - name: Run unit tests for each Java version as defined in the matrix
+      - name: Run functional tests against version defined in matrix  
         run: |
-          ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation -Ptest${{ matrix.java-version }} --continue --info
+          ./gradlew --console=plain --parallel functional_test:test -Ptest${{ matrix.java-version }} --continue --info
 
-      # Run the build.
-      - name: Run the tests with alternate Java version syntax - testing with -Dorg.gradle.java.home
-        run: |
-          ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain --parallel functional_test:test -PnoInstrumentation --continue --info
-
-
-  testing_job_dependence: ## Testing Only
-    needs: matrix_unit_test
+  testing_job_dependence: ## Test Only
+    needs:  matrix_functional_all_versions
     runs-on: ubuntu-latest
     steps:        
         - name: Cache test directory
