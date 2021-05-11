@@ -5,7 +5,7 @@ on:
   # pull_request:
   #   branches: [ main ]
   push:
-    branches: [ testing ]
+    branches: [ gha-testing ]
 
 jobs:
   matrix_unit_test:  ## Determine the module dependencies, why are we seeing errors for version not tested?
@@ -44,7 +44,7 @@ jobs:
           echo "Current $JAVA_HOME = " ${JAVA_HOME}
 
       ## Custom Cache Test
-      - name: Touch a file and saved to a cache directory
+      - name: Touch a file and save to a cache directory
         run: |
           mkdir test-cache-dir
           touch test-cache-dir/ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}.txt
