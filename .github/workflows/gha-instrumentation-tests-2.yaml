@@ -82,6 +82,7 @@ jobs:
             ${{ runner.os }}-gradle
 
 
+      ## AWS jars - plan to cache
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -90,13 +91,14 @@ jobs:
           aws-region: us-east-2
 
       - name: Download S3 instrumentation jar zip
-        run: aws s3 cp s3://nr-java-agent-s3-instrumentation/proprietary-jars-20200717.zip proprietary-jars.zip
+        run: aws s3 cp s3://nr-java-agent-s3-instrumentation/proprietary-jars-20200717.zip proprietary-jars.zip  ## 2020?
 
       - name: Unzip the instrumentation jars
         run: unzip proprietary-jars.zip
 
       - name: Log jars are in target libs
         run: find instrumentation -name "*.jar"
+      ## End AWS jars - plan to cache (check for cache, restore if required)
 
       # GHA run instrumentation tests
       # Run the build.
@@ -104,7 +106,7 @@ jobs:
         run: |
           ./gradlew --console=plain instrumentation:test -Ptest${{ matrix.java-version }} --continue --info
 
-      # Run the build.
+      # Run the build. Disabled for now.  Testing only.
       - name: Run the tests with alternate Java version syntax - testing with -Dorg.gradle.java.home
         run: |
           ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain instrumentation:test --continue --info
