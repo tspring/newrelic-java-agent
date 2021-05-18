@@ -50,7 +50,7 @@ jobs:
           ls -la 
           cd cache1 
           git status -sb
-          git renote -v
+          git remote -v
           ls -la 
           cd ../ 
 
@@ -68,7 +68,7 @@ jobs:
           ls -la 
           cd cache2 
           git status -sb
-          git renote -v
+          git remote -v
           ls -la 
           cd ../ 
 
@@ -86,7 +86,7 @@ jobs:
           ls -la 
           cd cache3 
           git status -sb
-          git renote -v
+          git remote -v
           ls -la 
           cd ../ 
 
@@ -104,7 +104,7 @@ jobs:
           ls -la 
           cd cache4 
           git status -sb
-          git renote -v
+          git remote -v
           ls -la 
           cd ../ 
 
