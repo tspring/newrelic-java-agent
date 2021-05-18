@@ -50,6 +50,7 @@ jobs:
           ls -la 
           cd cache1 
           git status -sb
+          git renote -v
           ls -la 
           cd ../ 
 
@@ -67,6 +68,7 @@ jobs:
           ls -la 
           cd cache2 
           git status -sb
+          git renote -v
           ls -la 
           cd ../ 
 
@@ -84,6 +86,7 @@ jobs:
           ls -la 
           cd cache3 
           git status -sb
+          git renote -v
           ls -la 
           cd ../ 
 
@@ -101,6 +104,20 @@ jobs:
           ls -la 
           cd cache4 
           git status -sb
+          git renote -v
+          ls -la 
+          cd ../ 
+
+      # Consolidate caches into one directory
+      - name: Consolidate caches
+        run: |
+          ls -la 
+          mkdir artifacts
+          mv cache1/* artifacts/
+          mv cache2/* artifacts/
+          mv cache3/* artifacts/
+          mv cache4/* artifacts/
+          cd artifacts
           ls -la 
           cd ../ 
 
