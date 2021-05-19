@@ -42,13 +42,13 @@ jobs:
           repository: kentonshade/java-ait-cache-1
           ref: main
           token: ${{ secrets.AITPAT }}
-          path: cache1 
+          path: appcache1 
 
       # Validate repo
       - name: Validate cache 1
         run: |
           ls -la 
-          cd cache1 
+          cd appcache1 
           git status -sb
           git remote -v
           ls -la 
@@ -60,13 +60,13 @@ jobs:
           repository: kentonshade/java-ait-cache-2
           ref: main
           token: ${{ secrets.AITPAT }}
-          path: cache2
+          path: appcache2
 
       # Validate repo
       - name: Validate cache 2
         run: |
           ls -la 
-          cd cache2 
+          cd appcache2 
           git status -sb
           git remote -v
           ls -la 
@@ -78,13 +78,13 @@ jobs:
           repository: kentonshade/java-ait-cache-3
           ref: main
           token: ${{ secrets.AITPAT }}
-          path: cache3 
+          path: appcache3 
 
       # Validate repo
       - name: Validate cache 3
         run: |
           ls -la 
-          cd cache3 
+          cd appcache3 
           git status -sb
           git remote -v
           ls -la 
@@ -96,13 +96,13 @@ jobs:
           repository: kentonshade/java-ait-cache-4
           ref: main
           token: ${{ secrets.AITPAT }}
-          path: cache4 
+          path: appcache4 
 
       # Validate repo
       - name: Validate cache 4
         run: |
           ls -la 
-          cd cache4 
+          cd appcache4 
           git status -sb
           git remote -v
           ls -la 
@@ -112,12 +112,12 @@ jobs:
       - name: Consolidate caches
         run: |
           ls -la 
-          mkdir artifacts
-          mv cache1/* artifacts/
-          mv cache2/* artifacts/
-          mv cache3/* artifacts/
-          mv cache4/* artifacts/
-          cd artifacts
+          mkdir apps
+          mv appcache1/* apps/
+          mv appcache2/* apps/
+          mv appcache3/* apps/
+          mv appcache4/* apps/
+          cd apps
           ls -la 
           cd ../ 
 
