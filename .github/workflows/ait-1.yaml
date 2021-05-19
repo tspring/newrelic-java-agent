@@ -27,6 +27,11 @@ jobs:
           token: ${{ secrets.AITPAT }}
           path: ait 
 
+      # Check for GH CLI
+      - name: GitHub CLI installed?
+        run: |
+          gh --version 
+
       # Validate repo
       - name: Validate AIT repo
         run: |
