@@ -3,10 +3,14 @@
 name: GHA Migration - strategy.matrix Instrumentation Tests 2
 
 on:
-  # pull_request:
-  #   branches: [ main ]
+  pull_request:
+    branches: [ gha-testing ] ## branches TBD
+    types: [assigned, opened, synchronize, reopened] ## Types TBD
   push:
     branches: [ gha-testing ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   matrix_instrumentation_test:
@@ -113,7 +117,7 @@ jobs:
 
 
   testing_job_dependence: ## Testing Only
-    needs: matrix_instrumentation_test
+    needs: matrix_instrumentation_test  ## Only runs after matrix_instrumentation_test runs
     runs-on: ubuntu-latest
     steps:        
         - name: Cache test directory
