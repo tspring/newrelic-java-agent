@@ -6,7 +6,7 @@ on:
   # pull_request:
   #   branches: [ main ]
   push:
-    branches: [ gha-testing ]
+    branches: [ gha-hans-ait ]
 
 jobs:
   AIT:
