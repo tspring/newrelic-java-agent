@@ -145,7 +145,8 @@ jobs:
       - name: Activate environment
         run: |
           echo "source activate"
-          . ait-workspace/bin/activate
+          whereis source 
+          source ait-workspace/bin/activate
 
       # Print Environmental variables 
       - name: Print Environmental variables (verify activate has been sourced)
