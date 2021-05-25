@@ -141,6 +141,10 @@ jobs:
 
       ## TESTING SECTION
 
+      - name: OS and IP check
+        run: |
+          ./.github/scripts/identify-os.sh
+
       # Source "activate"
       - name: Activate environment
         run: |
