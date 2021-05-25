@@ -40,6 +40,11 @@ jobs:
         run: |
           gh --version 
 
+      # Print Environmental variables
+      - name: Print Environmental variables
+        run: |
+          printenv
+
       # Validate repo
       - name: Validate AIT repo
         run: |
@@ -135,6 +140,18 @@ jobs:
           cd ../ 
 
       ## TESTING SECTION
+
+      # Source "activate"
+      - name: Activate environment
+        run: |
+          echo "source activate"
+          . ait-workspace/bin/activate
+
+      # Print Environmental variables 
+      - name: Print Environmental variables (verify activate has been sourced)
+        run: |
+          printenv
+
       # Build agent jar
       - name: build agent jar
         run: |
