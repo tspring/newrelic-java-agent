@@ -88,7 +88,7 @@ jobs:
           ./gradlew --console=plain --parallel functional_test:test -Ptest${{ matrix.java-version }} --continue --info
 
   testing_job_dependence: ## Test Only
-    needs:  matrix_functional_all_versions
+    # needs:  matrix_functional_all_versions
     runs-on: ubuntu-latest
     steps:        
       # Print Environmental variables 
