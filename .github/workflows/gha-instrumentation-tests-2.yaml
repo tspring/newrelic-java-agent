@@ -3,9 +3,9 @@
 name: GHA Instrumentation Tests 2
 
 on:
-  pull_request:
-    branches: [ gha-testing ] ## branches TBD
-    types: [assigned, opened, synchronize, reopened] ## Types TBD
+  # pull_request:
+  #   branches: [ gha-testing ] ## branches TBD
+  #   types: [assigned, opened, synchronize, reopened] ## Types TBD
   push:
     branches: [ gha-testing ]
 
