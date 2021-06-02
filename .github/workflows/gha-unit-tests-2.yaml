@@ -1,5 +1,5 @@
 ## Matrix strategy test for unit testing
-name: GHA Migration - strategy.matrix Unit Tests 2
+name: GHA Unit Tests 2
 
 on:
   # pull_request:
