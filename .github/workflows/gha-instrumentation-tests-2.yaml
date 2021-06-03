@@ -115,6 +115,16 @@ jobs:
         run: |
           ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain instrumentation:test --continue --info
 
+      # Capture HTML build result in artifacts
+      - name: Capture build reports
+      - uses: actions/upload-artifact@v2
+        with:
+          name: instrumentation-tests-results
+          path: |
+            instrumentation/**/build/test-results/* 
+            # path/output/test-results
+            # !path/**/*.tmp
+
 
   testing_job_dependence: ## Testing Only
     # needs: matrix_instrumentation_test  ## Only runs after matrix_instrumentation_test runs
