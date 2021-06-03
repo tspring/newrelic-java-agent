@@ -94,6 +94,7 @@ jobs:
 
       # Capture HTML build result in artifacts
       - name: Capture build reports
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
           name: unit-tests-results
