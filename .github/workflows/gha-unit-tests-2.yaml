@@ -97,9 +97,9 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: unit-tests-results
+          name: unit-tests-results-${{ matrix.java-version }}
           path: |
-            agent-bridge-datastore/build/reports/tests/* 
+            agent*/build/reports/tests/* 
             # path/output/test-results
             # !path/**/*.tmp
 

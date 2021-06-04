@@ -87,6 +87,18 @@ jobs:
         run: |
           ./gradlew --console=plain --parallel functional_test:test -Ptest${{ matrix.java-version }} --continue --info
 
+      # Capture HTML build result in artifacts
+      - name: Capture build reports
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-tests-results-${{ matrix.java-version }}
+          path: |
+            functional_test/build/reports/tests/* 
+            # path/output/test-results
+            # !path/**/*.tmp
+
+
   testing_job_dependence: ## Test Only
     # needs:  matrix_functional_all_versions
     runs-on: ubuntu-latest
