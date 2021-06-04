@@ -97,7 +97,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: unit-tests-results-${{ matrix.java-version }}
+          name: unit-tests-results-java-${{ matrix.java-version }}
           path: |
             agent*/build/reports/tests/* 
             # path/output/test-results
