@@ -61,6 +61,7 @@ jobs:
           ref: main
           token: ${{ secrets.AITPAT }}
           path: appcache1 
+          lfs: true
 
       # Validate repo
       - name: Validate cache 1
@@ -79,6 +80,7 @@ jobs:
           ref: main
           token: ${{ secrets.AITPAT }}
           path: appcache2
+          lfs: true
 
       # Validate repo
       - name: Validate cache 2
@@ -97,6 +99,7 @@ jobs:
           ref: main
           token: ${{ secrets.AITPAT }}
           path: appcache3 
+          lfs: true
 
       # Validate repo
       - name: Validate cache 3
@@ -115,6 +118,7 @@ jobs:
           ref: main
           token: ${{ secrets.AITPAT }}
           path: appcache4 
+          lfs: true
 
       # Validate repo
       - name: Validate cache 4
@@ -173,6 +177,12 @@ jobs:
           ref: main
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: java-actions
+
+      # Verify java-actions directory
+      - name: Verify java-actions directory
+        run: |
+          ls -la java-actions/
+          ls -la java-actions/.github/actions/composite/ 
 
       # Call the action with required input values (if applicable)
       # Shell scripts from jenkins job will be called from this action.yaml
