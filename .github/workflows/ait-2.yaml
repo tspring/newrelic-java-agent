@@ -163,6 +163,25 @@ jobs:
           echo "building agent jar"
           # ./gradlew jar
 
+      ## CUSTOM ACTION FOR AITs
+      # Still need to copy all of the repos into the New Relic Org.
+      # Checkout the private actions repo and then call the action
+      - name: Get private repo with AIT action
+        uses: actions/checkout@v2
+        with:
+          repository: kentonshade/java-actions
+          ref: main
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: java-actions
+
+      # Call the action with required input values (if applicable)
+      # Shell scripts from jenkins job will be called from this action.yaml
+      # - name: Run the AIT testing action
+      #   uses: java-actions/.github/actions/composite/ait 
+        # with:
+        #   second_input_id: 'remote -v' # This value is passed as an input to the associated shell script called from the actions.yaml.
+
+
       # Activate environment and run AITs
       - name: Activate environment and run AITs
         run: |
