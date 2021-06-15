@@ -63,6 +63,22 @@ jobs:
       ## restore jdk dir here
       ## Should not need to install below because of previous job
 
+      - name: Cache jdk dir
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-jdk-dir-${{ matrix.java-version }} ## See if this works and includes all versions
+        with:
+          path: /opt/hostedtoolcache/jdk/
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*') }} ## removing matrix variable to test if all will be restored.
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      # Check contents of cache path
+      - name: check cache dir
+        run: ls /opt/hostedtoolcache/jdk/
+
       # Need Java 8 for all tests
       # Previous assumption was that only 8 was required for each matrix run testing for subsequent versions.
       # Now adding all Java versions for each matirx run
