@@ -255,7 +255,8 @@ jobs:
       # Run the build.
       - name: Run instrumentation tests for each Java version as defined in the matrix
         run: |
-          ./gradlew --console=plain instrumentation:test -Ptest${{ matrix.java-version }} --continue --info
+          # Changed log level to --warn from --info
+          ./gradlew --console=plain instrumentation:test -Ptest${{ matrix.java-version }} --continue --warn
 
       # Run the build. Disabled for now.  Testing only.
       - name: Run the tests with alternate Java version syntax - testing with -Dorg.gradle.java.home

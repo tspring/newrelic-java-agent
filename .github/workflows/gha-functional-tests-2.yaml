@@ -231,7 +231,8 @@ jobs:
       # Run the build.
       - name: Run functional tests against version defined in matrix  
         run: |
-          ./gradlew --console=plain --parallel functional_test:test -Ptest${{ matrix.java-version }} --continue --info
+          # Changed log level to --warn from --info
+          ./gradlew --console=plain --parallel functional_test:test -Ptest${{ matrix.java-version }} --continue --warn
 
       # Capture HTML build result in artifacts
       - name: Capture build reports
