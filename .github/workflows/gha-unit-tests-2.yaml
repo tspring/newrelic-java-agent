@@ -96,13 +96,15 @@ jobs:
           touch jdk_paths.txt
           ls -1v /opt/hostedtoolcache/jdk/ > jdk_paths.txt
           cat jdk_paths.txt
-          COUNTER=8
+          JAVA_VERSION=8
           while read line
           do
               echo $line
               echo The counter is $COUNTER
-              echo "ORG_GRADLE_PROJECT_jdk$COUNTER=/opt/hostedtoolcache/jdk/$line/x64" >> $GITHUB_ENV
-              let COUNTER=COUNTER+1 
+              echo "ORG_GRADLE_PROJECT_jdk$JAVA_VERSION=/opt/hostedtoolcache/jdk/$line/x64" >> $GITHUB_ENV
+              # Below only use for subsequent jobs, as the jdk build doesn't set these paths
+              # echo "/opt/hostedtoolcache/jdk/$line/x64/bin" >> $GITHUB_PATH
+              let JAVA_VERSION=JAVA_VERSION+1 
           done < jdk_paths.txt
           # ls -1v /opt/hostedtoolcache/jdk/ | while read line ; do echo $line ; done 
           # ls -1v /opt/hostedtoolcache/jdk/ | while read line ; do echo "ORG_GRADLE_PROJECT_jdk$line=/opt/hostedtoolcache/jdk/$line/x64" >> $GITHUB_ENV ; done
