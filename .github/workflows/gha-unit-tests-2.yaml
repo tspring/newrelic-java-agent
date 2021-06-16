@@ -97,8 +97,9 @@ jobs:
           ls -1v /opt/hostedtoolcache/jdk/ > jdk_paths.txt
           cat jdk_paths.txt
           COUNTER=8
-          while [  $COUNTER -lt 16 ]; do
-              read $line
+          while read line
+          do
+              echo $line
               echo The counter is $COUNTER
               echo "ORG_GRADLE_PROJECT_jdk$COUNTER=/opt/hostedtoolcache/jdk/$line/x64" >> $GITHUB_ENV
               let COUNTER=COUNTER+1 
