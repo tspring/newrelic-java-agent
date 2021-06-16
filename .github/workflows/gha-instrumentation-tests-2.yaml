@@ -119,6 +119,7 @@ jobs:
   ###
 
   matrix_instrumentation_test:
+    timeout-minutes: 120
     needs: install-all-java
     runs-on: ubuntu-latest
     strategy:

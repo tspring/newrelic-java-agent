@@ -119,6 +119,7 @@ jobs:
   ###
 
   matrix_unit_test:  ## Determine the module dependencies, why are we seeing errors for version not tested?
+    timeout-minutes: 120
     needs: install-all-java
     runs-on: ubuntu-latest
     strategy:

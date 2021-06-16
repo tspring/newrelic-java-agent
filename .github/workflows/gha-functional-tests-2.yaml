@@ -113,6 +113,7 @@ jobs:
   ###
 
   matrix_functional_all_versions:
+    timeout-minutes: 120
     needs: install-all-java
     runs-on: ubuntu-latest
     strategy:
