@@ -108,137 +108,131 @@ jobs:
 
   ###
 
-  # matrix_unit_test:  ## Determine the module dependencies, why are we seeing errors for version not tested?
-  #   needs: install-all-java
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     ##max-parallel: 1 ## used to force sequential
-  #     fail-fast: false
-  #     matrix:
-  #       java-version: [8, 9, 10, 11, 12, 13, 14, 15]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: gradle/wrapper-validation-action@v1
+  matrix_unit_test:  ## Determine the module dependencies, why are we seeing errors for version not tested?
+    needs: install-all-java
+    runs-on: ubuntu-latest
+    strategy:
+      ##max-parallel: 1 ## used to force sequential
+      fail-fast: false
+      matrix:
+        java-version: [8, 9, 10, 11, 12, 13, 14, 15]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
 
 
-  #     ## restore jdk dir here
-  #     ## Should not need to install below because of previous job
+      ## restore jdk dir here
+      ## Should not need to install below because of previous job
 
-  #     - name: Cache jdk dir
-  #       uses: actions/cache@v2
-  #       env:
-  #         cache-name: cache-jdk-dir ## See if this works and includes all versions
-  #       with:
-  #         path: /opt/hostedtoolcache/jdk/
-  #         key: ${{ runner.os }}-build-${{ hashFiles('**/*') }} ## removing matrix variable to test if all will be restored.
-  #         restore-keys: |
-  #           ${{ runner.os }}-build-${{ env.cache-name }}-
-  #           ${{ runner.os }}-build-
-  #           ${{ runner.os }}-
+      - name: Cache jdk dir
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-jdk-dir ## See if this works and includes all versions
+        with:
+          path: /opt/hostedtoolcache/jdk/
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*') }} ## removing matrix variable to test if all will be restored.
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
-  #     # Check contents of cache path
-  #     - name: check cache dir
-  #       run: ls /opt/hostedtoolcache/jdk/
+      # Check contents of cache path
+      - name: check cache dir
+        run: ls /opt/hostedtoolcache/jdk/
 
-  #     # Need Java 8 for all tests
-  #     # Previous assumption was that only 8 was required for each matrix run testing for subsequent versions.
-  #     # Now adding all Java versions for each matirx run
-  #     # - name: Set up Java 8
-  #     #   uses: actions/setup-java@v1.4.3
-  #     #   with:
-  #     #     java-version: 8
+      # Need Java 8 for all tests
+      # Previous assumption was that only 8 was required for each matrix run testing for subsequent versions.
+      # Now adding all Java versions for each matirx run
+      # - name: Set up Java 8
+      #   uses: actions/setup-java@v1.4.3
+      #   with:
+      #     java-version: 8
 
-  #     # add jdk(s) to environmental variables (current will be reset by subsequent matrix step)
-  #     - name: save JAVA_HOME as JDK for later usage
-  #       run: |
-  #         echo "ORG_GRADLE_PROJECT_jdk8"=/opt/hostedtoolcache/jdk/8*/x64 >> $GITHUB_ENV
-  #         echo "ORG_GRADLE_PROJECT_jdk9"=/opt/hostedtoolcache/jdk/9*/x64 >> $GITHUB_ENV
-  #         echo "ORG_GRADLE_PROJECT_jdk10"=/opt/hostedtoolcache/jdk/10*/x64 >> $GITHUB_ENV
-  #         echo "ORG_GRADLE_PROJECT_jdk11"=/opt/hostedtoolcache/jdk/11*/x64 >> $GITHUB_ENV
-  #         echo "ORG_GRADLE_PROJECT_jdk12"=/opt/hostedtoolcache/jdk/12*/x64 >> $GITHUB_ENV
-  #         echo "ORG_GRADLE_PROJECT_jdk13"=/opt/hostedtoolcache/jdk/13*/x64 >> $GITHUB_ENV
-  #         echo "ORG_GRADLE_PROJECT_jdk14"=/opt/hostedtoolcache/jdk/14*/x64 >> $GITHUB_ENV
-  #         echo "ORG_GRADLE_PROJECT_jdk15"=/opt/hostedtoolcache/jdk/15*/x64 >> $GITHUB_ENV
+      # Create env variables for the jdks (check if we require only first character for project number)
+      - name: Create env variables for the jdks (check if we require only first character got project number)
+        run: |
+          ls -1v /opt/hostedtoolcache/jdk/ | while read line ; do echo $line ; done
+          ls -1v /opt/hostedtoolcache/jdk/ | while read line ; do echo "ORG_GRADLE_PROJECT_jdk$line=/opt/hostedtoolcache/jdk/$line/x64" >> $GITHUB_ENV ; done
 
-  #     # Check ENV variables
-  #     - name: Check environmental variables
-  #       run: printenv
+      # Check ENV variables
+      - name: Check environmental variables
+        run: printenv
 
-  #     # install of matrix Java versions
-  #     - name: Set up Java ${{ matrix.java-version }}
-  #       uses: actions/setup-java@v1.4.3
-  #       with:
-  #         java-version: ${{ matrix.java-version }}
+      # install of matrix Java versions
+      - name: Set up Java ${{ matrix.java-version }}
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: ${{ matrix.java-version }}
 
-  #     # Set current default jdk version
-  #     - name: save JAVA_HOME as JDK${{ matrix.java-version }} for later usage
-  #       run: echo "ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}=$JAVA_HOME" >> $GITHUB_ENV
+      # Set current default jdk version
+      - name: save JAVA_HOME as JDK${{ matrix.java-version }} for later usage
+        run: echo "ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}=$JAVA_HOME" >> $GITHUB_ENV
 
-  #     # Check $JAVA_HOME - This should be equal to the version of the matrix run
-  #     - name: Check "$JAVA_HOME"
-  #       run: |
-  #         echo "Current $JAVA_HOME = " ${JAVA_HOME}
-  #         whereis java #determine dir to cache
+      # Check $JAVA_HOME - This should be equal to the version of the matrix run
+      - name: Check "$JAVA_HOME"
+        run: |
+          echo "Current $JAVA_HOME = " ${JAVA_HOME}
+          whereis java #determine dir to cache
 
-  #     ## Custom Cache Test
-  #     - name: Touch a file and save to a cache directory
-  #       run: |
-  #         mkdir test-cache-dir
-  #         touch test-cache-dir/ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}.txt
-  #         ls -la
-  #         cd test-cache-dir
-  #         ls -la
-  #         cd ../
+      ## Custom Cache Test
+      - name: Touch a file and save to a cache directory
+        run: |
+          mkdir test-cache-dir
+          touch test-cache-dir/ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}.txt
+          ls -la
+          cd test-cache-dir
+          ls -la
+          cd ../
 
-  #     - name: Cache test directory
-  #       uses: actions/cache@v2
-  #       env:
-  #         cache-name: cache-test-dir
-  #       with:
-  #         path: test-cache-dir
-  #         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.txt') }} ## Explore extensions to cache if no lock file
-  #         restore-keys: |
-  #           ${{ runner.os }}-build-${{ env.cache-name }}-
-  #           ${{ runner.os }}-build-
-  #           ${{ runner.os }}-
+      - name: Cache test directory
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-test-dir
+        with:
+          path: test-cache-dir
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.txt') }} ## Explore extensions to cache if no lock file
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
-  #     # Restore the gradle cache
-  #     - name: Restore the gradle caches
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: |
-  #           ~/.gradle/caches
-  #           ~/.gradle/wrapper
-  #         # The docs say to use hashfiles, but gradle itself is smart enough to
-  #         # re-download dependencies if it couldn't resolve them.
-  #         # Because our gradle cache is _so big_, I think a 90% cache is far
-  #         # better than a 0% cache.
-  #         key: ${{ runner.os }}-gradle
-  #         restore-keys: |
-  #           ${{ runner.os }}-gradle
+      # Restore the gradle cache
+      - name: Restore the gradle caches
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          # The docs say to use hashfiles, but gradle itself is smart enough to
+          # re-download dependencies if it couldn't resolve them.
+          # Because our gradle cache is _so big_, I think a 90% cache is far
+          # better than a 0% cache.
+          key: ${{ runner.os }}-gradle
+          restore-keys: |
+            ${{ runner.os }}-gradle
 
-  #     # GHA run unit tests
-  #     # Run the build.
-  #     - name: Run unit tests for each Java version as defined in the matrix
-  #       run: |
-  #         ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation -Ptest${{ matrix.java-version }} --continue --info
+      # GHA run unit tests
+      # Run the build.
+      - name: Run unit tests for each Java version as defined in the matrix
+        run: |
+          ./gradlew --console=plain --parallel clean test -x functional_test:test -PnoInstrumentation -Ptest${{ matrix.java-version }} --continue --info
 
-  #     # Run the build.
-  #     - name: Run the tests with alternate Java version syntax - testing with -Dorg.gradle.java.home
-  #       run: |
-  #         ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain --parallel functional_test:test -PnoInstrumentation --continue --info
+      # Run the build.
+      - name: Run the tests with alternate Java version syntax - testing with -Dorg.gradle.java.home
+        run: |
+          ##./gradlew -Dorg.gradle.java.home=${ORG_GRADLE_PROJECT_jdk9} --console=plain --parallel functional_test:test -PnoInstrumentation --continue --info
 
 
-  #     # Capture HTML build result in artifacts
-  #     - name: Capture build reports
-  #       if: ${{ failure() }}
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: unit-tests-results-java-${{ matrix.java-version }}
-  #         path: |
-  #           agent*/build/reports/tests/* 
-  #           # path/output/test-results
-  #           # !path/**/*.tmp
+      # Capture HTML build result in artifacts
+      - name: Capture build reports
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-tests-results-java-${{ matrix.java-version }}
+          path: |
+            agent*/build/reports/tests/* 
+            # path/output/test-results
+            # !path/**/*.tmp
 
 
 
