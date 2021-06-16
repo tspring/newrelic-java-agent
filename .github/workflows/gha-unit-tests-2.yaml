@@ -70,9 +70,6 @@ jobs:
         with:
           java-version: 15
 
-      # - name: save JAVA_HOME as JDK${{ matrix.java-version }} for later usage
-      #   run: echo "ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}=$JAVA_HOME" >> $GITHUB_ENV
-
       - name: Cache jdk dir
         uses: actions/cache@v2
         env:

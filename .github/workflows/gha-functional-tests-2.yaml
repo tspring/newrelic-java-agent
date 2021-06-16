@@ -66,9 +66,6 @@ jobs:
         with:
           java-version: 15
 
-      # - name: save JAVA_HOME as JDK${{ matrix.java-version }} for later usage
-      #   run: echo "ORG_GRADLE_PROJECT_jdk${{ matrix.java-version }}=$JAVA_HOME" >> $GITHUB_ENV
-
       - name: Cache jdk dir
         uses: actions/cache@v2
         env:
@@ -102,8 +99,6 @@ jobs:
               # echo "/opt/hostedtoolcache/jdk/$line/x64/bin" >> $GITHUB_PATH
               let JAVA_VERSION=JAVA_VERSION+1 
           done < jdk_paths.txt
-          # ls -1v /opt/hostedtoolcache/jdk/ | while read line ; do echo $line ; done 
-          # ls -1v /opt/hostedtoolcache/jdk/ | while read line ; do echo "ORG_GRADLE_PROJECT_jdk$line=/opt/hostedtoolcache/jdk/$line/x64" >> $GITHUB_ENV ; done
 
       # Check ENV variables
       - name: Check environmental variables
