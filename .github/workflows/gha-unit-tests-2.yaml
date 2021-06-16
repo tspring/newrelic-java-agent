@@ -93,8 +93,8 @@ jobs:
       # Create env variables for the jdks
       - name: Create env variables for the jdks
         run: |
-          ls -1 /opt/hostedtoolcache/jdk/ | while read line ; do echo $line ; done
-          ls -la /opt/hostedtoolcache/jdk/ | while read line ; do echo $line ; done
+          ls -1v /opt/hostedtoolcache/jdk/ | while read line ; do echo $line ; done
+          # ls -la /opt/hostedtoolcache/jdk/ | while read line ; do echo $line ; done
 
       # Check ENV variables
       - name: Check environmental variables
