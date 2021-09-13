@@ -7,18 +7,13 @@
 
 package com.nr.agent.instrumentation;
 
-import com.newrelic.api.agent.Trace;
+import com.nr.agent.instrumentation.stub.BaseControllerStub;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(path = "/verb")
-public class VerbTests {
+public class VerbTests extends BaseControllerStub {
     @GetMapping(path = "/Get")
     public String getMapping() {
         return "getmapping";
@@ -43,6 +38,4 @@ public class VerbTests {
     public String deleteMapping() {
         return "deletemapping";
     }
-
-
 }
