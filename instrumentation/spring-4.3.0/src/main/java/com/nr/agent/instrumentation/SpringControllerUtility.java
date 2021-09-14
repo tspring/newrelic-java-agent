@@ -17,6 +17,10 @@ import java.util.logging.Level;
 
 public class SpringControllerUtility {
 
+    public static void log(String message) {
+        System.out.println(message);
+    }
+
     public static String getPath(String rootPath, String methodPath, RequestMethod httpMethod) {
         StringBuilder fullPath = new StringBuilder();
         if (rootPath != null && !rootPath.isEmpty()) {

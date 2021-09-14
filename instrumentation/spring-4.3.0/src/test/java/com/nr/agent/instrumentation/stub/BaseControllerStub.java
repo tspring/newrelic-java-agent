@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 public class BaseControllerStub {
-    @GetMapping
+    @GetMapping("/common")
     public ResponseEntity<String> somethingUnique() {
         return new ResponseEntity<>(BaseControllerStub.class.getCanonicalName(), HttpStatus.OK);
     }

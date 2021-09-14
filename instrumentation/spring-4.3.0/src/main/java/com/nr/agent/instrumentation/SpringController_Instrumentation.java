@@ -42,10 +42,13 @@ public class SpringController_Instrumentation {
     @WeaveIntoAllMethods
     @Trace
     private static void requestMapping() {
+        SpringControllerUtility.log("in requestMapping()");
         Transaction transaction = AgentBridge.getAgent().getTransaction(false);
+        SpringControllerUtility.log("transaction=" + transaction);
         if (transaction != null) {
             RequestMapping rootPathMapping = Weaver.getClassAnnotation(RequestMapping.class);
             String rootPath = null;
+            SpringControllerUtility.log("rootPathMapping=" + rootPathMapping);
             if (rootPathMapping != null) {
                 rootPath = SpringControllerUtility.getPathValue(rootPathMapping.value(), rootPathMapping.path());
             }
@@ -82,6 +85,9 @@ public class SpringController_Instrumentation {
                 String methodPath = SpringControllerUtility.getPathValue(methodPathMapping.value(),
                         methodPathMapping.path());
                 processAnnotations(transaction, new RequestMethod[] { RequestMethod.GET }, rootPath, methodPath, MethodHandles.lookup().lookupClass());
+            }
+            else {
+                SpringControllerUtility.log("*** NO ANNOTATION FOUND ***");
             }
         }
     }

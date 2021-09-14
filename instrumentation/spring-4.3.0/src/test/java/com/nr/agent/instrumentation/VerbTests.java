@@ -7,13 +7,12 @@
 
 package com.nr.agent.instrumentation;
 
-import com.nr.agent.instrumentation.stub.BaseControllerStub;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(path = "/verb")
-public class VerbTests extends BaseControllerStub {
+public class VerbTests {
     @GetMapping(path = "/Get")
     public String getMapping() {
         return "getmapping";
