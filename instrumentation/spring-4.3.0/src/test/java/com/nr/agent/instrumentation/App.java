@@ -90,7 +90,7 @@ public class App {
     }
 
     @Trace(dispatcher = true)
-    public static String inheritedPath() {
+    public static String inheritedMethodShouldBeOnPath() {
         return new Child().inheritedPath();
     }
 }
