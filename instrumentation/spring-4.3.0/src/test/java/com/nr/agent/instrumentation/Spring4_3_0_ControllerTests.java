@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -104,8 +105,18 @@ public class Spring4_3_0_ControllerTests {
     }
 
     @Test
-    public void testChildPath() {
+    public void testChildPath_notInherited() {
         assertEquals("childNotInherited", App.notInheritedPath());
+        Introspector introspector = InstrumentationTestRunner.getIntrospector();
+        String expectedTransactionName = "OtherTransaction/SpringController/child/notInherited (GET)";
+        Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
+        assertEquals(1, metrics.get("Java/com.nr.agent.instrumentation.stub.ChildController/notInherited").getCallCount());
+    }
+
+    @Ignore
+    @Test
+    public void testChildPath_inherited() {
+        assertEquals("parent", App.notInheritedPath());
         Introspector introspector = InstrumentationTestRunner.getIntrospector();
         String expectedTransactionName = "OtherTransaction/SpringController/child/notInherited (GET)";
         Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
