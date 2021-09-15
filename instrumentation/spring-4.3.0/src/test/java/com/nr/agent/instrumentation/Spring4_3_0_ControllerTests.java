@@ -106,6 +106,10 @@ public class Spring4_3_0_ControllerTests {
     @Test
     public void testChildPath() {
         assertEquals("childNotInherited", App.notInheritedPath());
+        Introspector introspector = InstrumentationTestRunner.getIntrospector();
+        String expectedTransactionName = "OtherTransaction/SpringController/child/notInherited (GET)";
+        Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
+        assertEquals(1, metrics.get("Java/com.nr.agent.instrumentation.stub.ChildController/notInherited").getCallCount());
     }
 
     @Test
