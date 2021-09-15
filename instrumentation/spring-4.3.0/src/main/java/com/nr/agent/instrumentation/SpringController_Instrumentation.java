@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.lang.invoke.MethodHandles;
 
+import static com.nr.agent.instrumentation.SpringControllerUtility.log;
 import static com.nr.agent.instrumentation.SpringControllerUtility.processAnnotations;
 
 @WeaveWithAnnotation(annotationClasses = {
@@ -42,15 +43,17 @@ public class SpringController_Instrumentation {
     @WeaveIntoAllMethods
     @Trace
     private static void requestMapping() {
-        SpringControllerUtility.log("in requestMapping()");
+        log("in requestMapping()");
         Transaction transaction = AgentBridge.getAgent().getTransaction(false);
-        SpringControllerUtility.log("transaction=" + transaction);
+        log("transaction=" + transaction);
         if (transaction != null) {
             RequestMapping rootPathMapping = Weaver.getClassAnnotation(RequestMapping.class);
             String rootPath = null;
-            SpringControllerUtility.log("rootPathMapping=" + rootPathMapping);
+            log("rootPathMapping=" + rootPathMapping);
             if (rootPathMapping != null) {
+                log("rootPathMapping=" + String.join(",", rootPathMapping.value()));
                 rootPath = SpringControllerUtility.getPathValue(rootPathMapping.value(), rootPathMapping.path());
+                log("rootPath=" + rootPath);
             }
 
             // the ordering of the following is important. RequestMapping overrides the new annotations. Then it goes:
@@ -87,7 +90,7 @@ public class SpringController_Instrumentation {
                 processAnnotations(transaction, new RequestMethod[] { RequestMethod.GET }, rootPath, methodPath, MethodHandles.lookup().lookupClass());
             }
             else {
-                SpringControllerUtility.log("*** NO ANNOTATION FOUND ***");
+                log("*** NO ANNOTATION FOUND ***");
             }
         }
     }

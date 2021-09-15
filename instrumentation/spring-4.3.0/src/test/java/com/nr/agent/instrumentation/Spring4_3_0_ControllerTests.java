@@ -114,7 +114,7 @@ public class Spring4_3_0_ControllerTests {
     @Test
     public void testChildPath_inherited() {
         assertEquals("parent", App.inheritedPath());
-        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/inherited (GET)",
+        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/parent (GET)",
                 "Java/com.nr.agent.instrumentation.stub.ChildController/notInherited");
     }
 
