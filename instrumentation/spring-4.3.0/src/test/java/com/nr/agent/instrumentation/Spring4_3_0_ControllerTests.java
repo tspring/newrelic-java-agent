@@ -175,7 +175,6 @@ public class Spring4_3_0_ControllerTests {
             metrics = introspector.getMetricsForTransaction(transactionName);
         }
         catch (Exception e) {
-
             String message = "Unable to find transaction with name \"" + transactionName + "\"\n" +
                     "found these:\n\t" + String.join("\n\t", introspector.getTransactionNames()) + "\n\n";
             fail(message);
