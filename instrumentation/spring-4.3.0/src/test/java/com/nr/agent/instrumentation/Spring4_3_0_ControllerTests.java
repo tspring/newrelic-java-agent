@@ -21,7 +21,7 @@ import com.newrelic.agent.introspec.TracedMetricData;
 
 @RunWith(InstrumentationTestRunner.class)
 @InstrumentationTestConfig(includePrefixes = { "com.nr.agent.instrumentation" })
-public class SpringControllerTests {
+public class Spring4_3_0_ControllerTests {
 
     @Test
     public void testErrorPath() {
@@ -101,6 +101,11 @@ public class SpringControllerTests {
         String expectedTransactionName = "OtherTransaction/SpringController/kotlin/read (GET)";
         Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
         assertEquals(1, metrics.get("Java/com.nr.agent.instrumentation.KotlinSpringClass/read").getCallCount());
+    }
+
+    @Test
+    public void testChildPath() {
+        assertEquals("childNotInherited", App.notInheritedPath());
     }
 
     @Test

@@ -10,6 +10,7 @@ package com.nr.agent.instrumentation;
 import java.util.Collections;
 
 import com.newrelic.api.agent.Trace;
+import com.nr.agent.instrumentation.stub.ChildController;
 
 public class App {
 
@@ -81,5 +82,10 @@ public class App {
     @Trace(dispatcher = true)
     public static String delete() {
         return new VerbTests().deleteMapping();
+    }
+
+    @Trace(dispatcher = true)
+    public static String notInheritedPath() {
+        return new ChildController().notInherited();
     }
 }
