@@ -32,6 +32,7 @@ public class SpringBaseController_Instrumentation {
     @WeaveIntoAllMethods
     @Trace
     private static void requestMapping() {
+        SpringControllerUtility.log("in BASE requestMapping()");
     }
 
 }
