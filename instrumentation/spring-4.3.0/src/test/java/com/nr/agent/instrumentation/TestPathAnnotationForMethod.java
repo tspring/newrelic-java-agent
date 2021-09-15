@@ -7,12 +7,12 @@
 
 package com.nr.agent.instrumentation;
 
-import com.nr.agent.instrumentation.stub.BaseControllerStub;
+import com.nr.agent.instrumentation.testCases.Parent;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class TestPathAnnotationForMethod extends BaseControllerStub {
+public class TestPathAnnotationForMethod extends Parent {
 	
 	@RequestMapping(path = "/pathTest")
 	public String testPathAnnotation() {

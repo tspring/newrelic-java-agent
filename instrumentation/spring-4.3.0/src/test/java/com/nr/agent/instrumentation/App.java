@@ -10,7 +10,7 @@ package com.nr.agent.instrumentation;
 import java.util.Collections;
 
 import com.newrelic.api.agent.Trace;
-import com.nr.agent.instrumentation.stub.ChildController;
+import com.nr.agent.instrumentation.testCases.Child;
 
 public class App {
 
@@ -86,6 +86,11 @@ public class App {
 
     @Trace(dispatcher = true)
     public static String notInheritedPath() {
-        return new ChildController().notInherited();
+        return new Child().notInheritedPath();
+    }
+
+    @Trace(dispatcher = true)
+    public static String inheritedPath() {
+        return new Child().inheritedPath();
     }
 }

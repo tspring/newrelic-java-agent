@@ -8,10 +8,10 @@
 package com.nr.agent.instrumentation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -107,20 +107,15 @@ public class Spring4_3_0_ControllerTests {
     @Test
     public void testChildPath_notInherited() {
         assertEquals("childNotInherited", App.notInheritedPath());
-        Introspector introspector = InstrumentationTestRunner.getIntrospector();
-        String expectedTransactionName = "OtherTransaction/SpringController/child/notInherited (GET)";
-        Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
-        assertEquals(1, metrics.get("Java/com.nr.agent.instrumentation.stub.ChildController/notInherited").getCallCount());
+        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/notInherited (GET)",
+                "Java/com.nr.agent.instrumentation.testCases.Child/notInheritedPath");
     }
 
-    @Ignore
     @Test
     public void testChildPath_inherited() {
-        assertEquals("parent", App.notInheritedPath());
-        Introspector introspector = InstrumentationTestRunner.getIntrospector();
-        String expectedTransactionName = "OtherTransaction/SpringController/child/notInherited (GET)";
-        Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
-        assertEquals(1, metrics.get("Java/com.nr.agent.instrumentation.stub.ChildController/notInherited").getCallCount());
+        assertEquals("parent", App.inheritedPath());
+        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/inherited (GET)",
+                "Java/com.nr.agent.instrumentation.stub.ChildController/notInherited");
     }
 
     @Test
@@ -158,5 +153,33 @@ public class Spring4_3_0_ControllerTests {
         String expectedTransactionName = "OtherTransaction/SpringController/verb/" + path + " (" + verb + ")";
         Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
         assertEquals(1, metrics.get("Java/com.nr.agent.instrumentation.VerbTests/" + method).getCallCount());
+    }
+
+    private static void assertTransactionMetricCalledOnce(String transactionName, String metric) {
+        Map<String, TracedMetricData> metrics = findMetricsForTransactionWithNameOrFail(transactionName);
+        TracedMetricData tracedMetricData = metrics.get(metric);
+        if(tracedMetricData == null) {
+            String message = "Unable to find metric data for [" + metric + "]\n" +
+                    "found these:\n\t" + String.join("\n\t", metrics.keySet()) + "\n\n";
+            fail(message);
+        } else {
+            assertEquals("Expected traced metric call count of 1 for " + metric, 1,
+                    tracedMetricData.getCallCount());
+        }
+    }
+
+    private static Map<String, TracedMetricData> findMetricsForTransactionWithNameOrFail(String transactionName) {
+        Introspector introspector = InstrumentationTestRunner.getIntrospector();
+        Map<String, TracedMetricData> metrics = null;
+        try {
+            metrics = introspector.getMetricsForTransaction(transactionName);
+        }
+        catch (Exception e) {
+
+            String message = "Unable to find transaction with name \"" + transactionName + "\"\n" +
+                    "found these:\n\t" + String.join("\n\t", introspector.getTransactionNames()) + "\n\n";
+            fail(message);
+        }
+        return metrics;
     }
 }
