@@ -12,6 +12,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Map;
 
+import com.newrelic.api.agent.NewRelic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -67,7 +68,6 @@ public class Spring4_3_0_ControllerTests {
     @Test
     public void testNestedValuePath() {
         assertEquals("nestedValuePath", App.nestedValuePath());
-
         Introspector introspector = InstrumentationTestRunner.getIntrospector();
         String expectedTransactionName = "OtherTransaction/SpringController/valuePath/innerPath (GET)";
         Map<String, TracedMetricData> metrics = introspector.getMetricsForTransaction(expectedTransactionName);
@@ -104,21 +104,21 @@ public class Spring4_3_0_ControllerTests {
         assertEquals(1, metrics.get("Java/com.nr.agent.instrumentation.KotlinSpringClass/read").getCallCount());
     }
 
-    @Test
-    public void testChildPath_notInherited() {
-        assertEquals("childNotInherited", App.notInheritedPath());
-        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/notInherited (GET)",
-                "Java/com.nr.agent.instrumentation.testCases.Child/notInheritedPath");
-    }
-
-    @Test
-    public void testChildPath_inherited() {
-        assertEquals("parent", App.inheritedMethodShouldBeOnPath());
-//        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/parent (GET)",
+//    @Test
+//    public void testChildPath_notInherited() {
+//        assertEquals("childNotInherited", App.notInheritedPath());
+//        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/notInherited (GET)",
+//                "Java/com.nr.agent.instrumentation.testCases.Child/notInheritedPath");
+//    }
+//
+//    @Test
+//    public void testChildPath_inherited() {
+//        assertEquals("parent", App.inheritedMethodShouldBeOnPath());
+////        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/child/parent (GET)",
+////                "Java/com.nr.agent.instrumentation.testCases.Child/inheritedPath");
+//        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/parent (GET)",
 //                "Java/com.nr.agent.instrumentation.testCases.Child/inheritedPath");
-        assertTransactionMetricCalledOnce("OtherTransaction/SpringController/parent (GET)",
-                "Java/com.nr.agent.instrumentation.testCases.Child/inheritedPath");
-    }
+//    }
 
     @Test
     public void testGet() {
