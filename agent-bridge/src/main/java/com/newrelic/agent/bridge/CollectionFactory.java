@@ -14,7 +14,7 @@ import java.util.Map;
  * depending directly on them.
  *
  * For example, there is no default weak-keyed concurrent map in the JDK, so instrumentation authors end up using a
- * fully synchronized wrapper around a {@link java.util.WeakHashMap}. Caffeine has a better implementation; this interface
+ * fully synchronized wrapper around a {@link java.util.WeakHashMap}. Guava has a more good implementation; this class
  * allows the Agent to provide it at runtime.
  */
 public interface CollectionFactory {

@@ -7,8 +7,8 @@
 
 package com.newrelic.agent.transaction;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.newrelic.agent.tracers.MetricNameFormatWithHost;
 
 import java.net.URL;
@@ -29,7 +29,7 @@ public class TransactionCache {
 
     private Cache<Object, MetricNameFormatWithHost> getInputStreamCache() {
         if (inputStreamCache == null) {
-            inputStreamCache = Caffeine.newBuilder().weakKeys().build();
+            inputStreamCache = CacheBuilder.newBuilder().weakKeys().build();
         }
         return inputStreamCache;
     }
@@ -44,7 +44,7 @@ public class TransactionCache {
 
     private Cache<Object, URL> getUrlCache() {
         if (urlCache == null) {
-            urlCache = Caffeine.newBuilder().weakKeys().build();
+            urlCache = CacheBuilder.newBuilder().weakKeys().build();
         }
         return urlCache;
     }

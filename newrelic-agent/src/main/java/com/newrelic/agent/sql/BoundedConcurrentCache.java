@@ -7,8 +7,8 @@
 
 package com.newrelic.agent.sql;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,8 +41,8 @@ public class BoundedConcurrentCache<K, V extends Comparable<V> & CacheValue<K>> 
     public BoundedConcurrentCache(int size, Comparator<V> comparator) {
         this.maxCapacity = size;
         this.priorityQueue = new PriorityBlockingQueue<>(size, comparator);
-        this.cache = Caffeine.newBuilder()
-                .initialCapacity(16)
+        this.cache = CacheBuilder.newBuilder()
+                .concurrencyLevel(16)
                 .build();
     }
 

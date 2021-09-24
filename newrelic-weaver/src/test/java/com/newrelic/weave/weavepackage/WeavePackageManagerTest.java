@@ -7,7 +7,6 @@
 
 package com.newrelic.weave.weavepackage;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.newrelic.api.agent.weaver.MatchType;
 import com.newrelic.api.agent.weaver.Weave;
 import com.newrelic.api.agent.weaver.Weaver;
@@ -84,7 +83,7 @@ public class WeavePackageManagerTest {
                 wpm.validPackages.getIfPresent(Thread.currentThread().getContextClassLoader()).values()) {
             WeaveTestUtils.expectViolations(res);
         }
-        Assert.assertEquals(1, getCacheSize(wpm.validPackages));
+        Assert.assertEquals(1, wpm.validPackages.size());
         Assert.assertEquals(2, wpm.validPackages.getIfPresent(Thread.currentThread().getContextClassLoader()).size());
 
         Assert.assertNotNull(compositeBytes);
@@ -125,8 +124,8 @@ public class WeavePackageManagerTest {
                 WeaveTestUtils.getClassBytes(targetClassName));
         Assert.assertTrue(bsPackage.hasMatcher(targetInternalName, superNames, interfaceNames,
                 Collections.<String>emptySet(), Collections.<String>emptySet(), null));
-        Assert.assertEquals(0, getCacheSize(wpm.invalidPackages));
-        Assert.assertEquals(1, getCacheSize(wpm.validPackages));
+        Assert.assertEquals(0, wpm.invalidPackages.size());
+        Assert.assertEquals(1, wpm.validPackages.size());
         Assert.assertNotNull(wpm.validPackages.getIfPresent(BootstrapLoader.PLACEHOLDER));
         Assert.assertNotNull(wpm.validPackages.getIfPresent(BootstrapLoader.PLACEHOLDER).get(bsPackage));
 
@@ -148,7 +147,7 @@ public class WeavePackageManagerTest {
         byte[] compositeBytes = WeaveTestUtils.getClassBytes(className);
         Assert.assertNotNull(compositeBytes);
         compositeBytes = wpm.weave(originalClassLoader, internalName, compositeBytes);
-        Assert.assertEquals(1, getCacheSize(wpm.validPackages));
+        Assert.assertEquals(1, wpm.validPackages.size());
         Assert.assertEquals(1, wpm.validPackages.getIfPresent(originalClassLoader).size());
 
         Assert.assertNotNull(compositeBytes);
@@ -170,7 +169,7 @@ public class WeavePackageManagerTest {
             wpm.weave(cl, "com/newrelic/weave/weavepackage/testclasses/MyOriginalBase",
                     WeaveTestUtils.getClassBytes("com.newrelic.weave.weavepackage.testclasses.MyOriginalBase"));
         }
-        Assert.assertTrue(getCacheSize(wpm.validPackages) <= WeavePackageManager.MAX_VALID_PACKAGE_CACHE);
+        Assert.assertTrue(wpm.validPackages.size() <= WeavePackageManager.MAX_VALID_PACKAGE_CACHE);
 
         // 3) load the original class and a new class with the original classloader and verify they load + weave
 
@@ -188,7 +187,7 @@ public class WeavePackageManagerTest {
         byte[] newCompositeBytes = WeaveTestUtils.getClassBytes(newClassName);
         Assert.assertNotNull(newCompositeBytes);
         newCompositeBytes = wpm.weave(originalClassLoader, newInternalName, newCompositeBytes);
-        Assert.assertTrue(getCacheSize(wpm.validPackages) <= WeavePackageManager.MAX_VALID_PACKAGE_CACHE);
+        Assert.assertTrue(wpm.validPackages.size() <= WeavePackageManager.MAX_VALID_PACKAGE_CACHE);
         Assert.assertEquals(1, wpm.validPackages.getIfPresent(originalClassLoader).size());
 
         Assert.assertNotNull(newCompositeBytes);
@@ -219,7 +218,7 @@ public class WeavePackageManagerTest {
         byte[] compositeBytes = WeaveTestUtils.getClassBytes(className);
         Assert.assertNotNull(compositeBytes);
         compositeBytes = wpm.weave(originalClassLoader, internalName, compositeBytes);
-        Assert.assertEquals(1, getCacheSize(wpm.invalidPackages));
+        Assert.assertEquals(1, wpm.invalidPackages.size());
         Assert.assertEquals(1, wpm.invalidPackages.getIfPresent(originalClassLoader).size());
 
         Assert.assertNull(compositeBytes);
@@ -240,7 +239,7 @@ public class WeavePackageManagerTest {
             wpm.weave(cl, "com/newrelic/weave/weavepackage/WeavePackageManagerTest$NewNoMatchClass",
                     WeaveTestUtils.getClassBytes("com.newrelic.weave.weavepackage.WeavePackageManagerTest$NewNoMatchClass"));
         }
-        Assert.assertTrue(WeavePackageManager.MAX_INVALID_PACKAGE_CACHE >= getCacheSize(wpm.invalidPackages));
+        Assert.assertTrue(WeavePackageManager.MAX_INVALID_PACKAGE_CACHE >= wpm.invalidPackages.size());
 
         // 3) load with the original classloader again and verify that class loads but doesn't weave (pushes to invalid)
         compositeBytes = WeaveTestUtils.getClassBytes(className);
@@ -270,7 +269,7 @@ public class WeavePackageManagerTest {
             wpm.weave(cl, "com/newrelic/weave/weavepackage/testclasses/MyOriginalBase",
                     WeaveTestUtils.getClassBytes("com.newrelic.weave.weavepackage.testclasses.MyOriginalBase"));
         }
-        Assert.assertEquals(numClassLoaders, getCacheSize(wpm.validPackages));
+        Assert.assertEquals(numClassLoaders, wpm.validPackages.size());
 
         for (int i = 0; i < 5; ++i) {
             System.gc();
@@ -279,7 +278,7 @@ public class WeavePackageManagerTest {
             wpm.weave(cl, "com/newrelic/weave/weavepackage/testclasses/MyOriginalBase",
                     WeaveTestUtils.getClassBytes("com.newrelic.weave.weavepackage.testclasses.MyOriginalBase"));
         }
-        Assert.assertTrue(getCacheSize(wpm.validPackages) >= numClassLoaders);
+        Assert.assertTrue(wpm.validPackages.size() >= numClassLoaders);
 
         classloaders.clear();
         for (int i = 0; i < 10; ++i) {
@@ -292,7 +291,7 @@ public class WeavePackageManagerTest {
             wpm.validPackages.invalidate(cl);
         }
 
-        Assert.assertTrue(getCacheSize(wpm.validPackages) < numClassLoaders);
+        Assert.assertTrue(wpm.validPackages.size() < numClassLoaders);
     }
 
     /**
@@ -435,12 +434,6 @@ public class WeavePackageManagerTest {
         wpm.deregister(testPackage2.getName());
         expectedInvokeCount++;
         Assert.assertTrue(expectedInvokeCount == listener.invokeCount);
-    }
-
-    private static int getCacheSize(Cache<?, ?> cache) {
-        // Trigger cache cleanup to evict expired entries.
-        cache.cleanUp();
-        return cache.asMap().size();
     }
 
     private static class TestListener implements WeavePackageLifetimeListener, ClassWeavedListener {

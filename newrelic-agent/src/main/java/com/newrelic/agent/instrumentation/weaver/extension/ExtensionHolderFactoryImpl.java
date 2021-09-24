@@ -7,13 +7,14 @@
 
 package com.newrelic.agent.instrumentation.weaver.extension;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.newrelic.agent.bridge.AgentBridge;
 import com.newrelic.agent.bridge.ExtensionHolder;
 import com.newrelic.agent.bridge.ExtensionHolderFactory;
 
-import java.util.function.Supplier;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
 /**
@@ -28,12 +29,12 @@ public class ExtensionHolderFactoryImpl implements ExtensionHolderFactory {
     }
 
     /**
-     * Uses a caffeine cache to store weaver extension classes.
+     * Uses a guava cache to store weaver extension classes.
      */
     public static class ExtensionHolderImpl<T> implements ExtensionHolder<T> {
         // @formatter:off
-        private final Cache<Object, T> instanceCache = Caffeine.newBuilder()
-                .initialCapacity(32)
+        private final Cache<Object, T> instanceCache = CacheBuilder.newBuilder()
+                .concurrencyLevel(32)
                 .weakKeys()
                 .build();
         // @formatter:on
@@ -44,13 +45,13 @@ public class ExtensionHolderFactoryImpl implements ExtensionHolderFactory {
         }
 
         @Override
-        public T getExtension(Object instance, Supplier<T> valueLoader) {
+        public T getExtension(Object instance, Callable<T> valueLoader) {
             try {
-                return instanceCache.get(instance, k -> valueLoader.get());
-            } catch (RuntimeException e) {
+                return instanceCache.get(instance, valueLoader);
+            } catch (ExecutionException e) {
                 AgentBridge.getAgent().getLogger().log(Level.FINE, e, "Unable to load extension class for {0}",
                         instance.getClass().getName());
-                throw e;
+                throw new RuntimeException(e);
             }
         }
     }

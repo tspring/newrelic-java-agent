@@ -7,10 +7,11 @@
 
 package com.newrelic.agent.service.async;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.RemovalCause;
-import com.github.benmanes.caffeine.cache.RemovalListener;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalCause;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.newrelic.agent.Agent;
 import com.newrelic.agent.HarvestListener;
 import com.newrelic.agent.Transaction;
@@ -45,15 +46,16 @@ public class AsyncTransactionService extends AbstractService implements HarvestL
 
     private static final RemovalListener<Object, Token> removalListener = new RemovalListener<Object, Token>() {
         @Override
-        public void onRemoval(Object key, Token transaction, RemovalCause cause) {
+        public void onRemoval(RemovalNotification<Object, Token> notification) {
+            RemovalCause cause = notification.getCause();
             if (cause == RemovalCause.EXPLICIT) {
                 Agent.LOG.log(Level.FINEST, "{2}: Key {0} with transaction {1} removed from cache.",
-                        key, transaction, cause);
+                        notification.getKey(), notification.getValue(), cause);
             } else {
                 // timeout, size
                 Agent.LOG.log(Level.FINE,
                         "{2}: The registered async activity with async context {0} has timed out for transaction {1} and been removed from the cache.",
-                        key, transaction, cause);
+                        notification.getKey(), notification.getValue(), cause);
             }
         }
     };
@@ -72,10 +74,10 @@ public class AsyncTransactionService extends AbstractService implements HarvestL
         long timeoutSec = ServiceFactory.getConfigService().getDefaultAgentConfig().getTokenTimeoutInSec();
         long timeOutMilli = TimeConversion.convertToMilliWithLowerBound(timeoutSec, TimeUnit.SECONDS, 250L);
 
-        return Caffeine.newBuilder()
+        return CacheBuilder.newBuilder()
                 .expireAfterWrite(timeOutMilli, TimeUnit.MILLISECONDS)
                 .removalListener(removalListener)
-                .initialCapacity(8)
+                .concurrencyLevel(8)
                 .build();
     }
 

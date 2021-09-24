@@ -7,18 +7,22 @@
 
 package com.newrelic.agent.tracers.metricname;
 
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Sets;
 import com.newrelic.agent.MetricNames;
 import com.newrelic.agent.tracers.ClassMethodSignature;
 import com.newrelic.agent.util.Strings;
 
 public class MetricNameFormats {
 
-    private static final Cache<MNFKey, MetricNameFormat> cmsToMnf = Caffeine.newBuilder()
+    private static final Cache<MNFKey, MetricNameFormat> cmsToMnf = CacheBuilder.newBuilder()
                                                                                 .build();
 
     private MetricNameFormats() {
@@ -50,7 +54,16 @@ public class MetricNameFormats {
         }
 
         final MNFKey key = new MNFKey(sig, invocationTarget, null, 0);
-        return cmsToMnf.get(key, k -> new ClassMethodMetricNameFormat(sig, key.invocationTargetClassName));
+        try {
+            return cmsToMnf.get(key, new Callable<MetricNameFormat>() {
+                @Override
+                public MetricNameFormat call() throws Exception {
+                    return new ClassMethodMetricNameFormat(sig, key.invocationTargetClassName);
+                }
+            });
+        } catch (ExecutionException e) {
+            return new ClassMethodMetricNameFormat(sig, key.invocationTargetClassName);
+        }
     }
 
     public static MetricNameFormat getFormatter(final Object invocationTarget, final ClassMethodSignature sig,
@@ -60,11 +73,29 @@ public class MetricNameFormats {
         }
 
         final MNFKey key = new MNFKey(sig, invocationTarget, metricName, flags);
-        return cmsToMnf.get(
-                key,
-                k -> metricName == null
-                        ? sig.getMetricNameFormat(key.invocationTargetClassName, flags)
-                        : new SimpleMetricNameFormat(getTracerMetricName(key.invocationTargetClassName, sig.getClassName(), metricName)));
+        if (metricName == null) {
+            try {
+                return cmsToMnf.get(key, new Callable<MetricNameFormat>() {
+                    @Override
+                    public MetricNameFormat call() throws Exception {
+                        return sig.getMetricNameFormat(key.invocationTargetClassName, flags);
+                    }
+                });
+            } catch (ExecutionException e) {
+                return sig.getMetricNameFormat(key.invocationTargetClassName, flags);
+            }
+        } else {
+            try {
+                return cmsToMnf.get(key, new Callable<MetricNameFormat>() {
+                    @Override
+                    public MetricNameFormat call() throws Exception {
+                        return new SimpleMetricNameFormat(getTracerMetricName(key.invocationTargetClassName, sig.getClassName(), metricName));
+                    }
+                });
+            } catch (ExecutionException e) {
+                return new SimpleMetricNameFormat(getTracerMetricName(key.invocationTargetClassName, sig.getClassName(), metricName));
+            }
+        }
     }
 
     private static final Pattern METRIC_NAME_REPLACE = Pattern.compile("${className}", Pattern.LITERAL);

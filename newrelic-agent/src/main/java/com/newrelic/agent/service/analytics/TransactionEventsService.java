@@ -8,8 +8,9 @@
 package com.newrelic.agent.service.analytics;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.newrelic.agent.Agent;
 import com.newrelic.agent.Harvestable;
 import com.newrelic.agent.MetricNames;
@@ -96,8 +97,8 @@ public class TransactionEventsService extends AbstractService implements EventSe
      * Multiple events for the same transaction name will reference a single instance of the transaction name string
      * using this cache.
      *
-     * @see Caffeine#maximumSize(long)
-     * @see Caffeine#expireAfterAccess(long, TimeUnit)
+     * @see CacheBuilder#maximumSize(long)
+     * @see CacheBuilder#expireAfterAccess(long, TimeUnit)
      */
     private volatile LoadingCache<String, String> transactionNameCache;
 
@@ -122,10 +123,15 @@ public class TransactionEventsService extends AbstractService implements EventSe
     }
 
     private static LoadingCache<String, String> createTransactionNameCache(int maxSamplesStored) {
-        return Caffeine.newBuilder()
+        return CacheBuilder.newBuilder()
                 .maximumSize(maxSamplesStored)
                 .expireAfterAccess(5, TimeUnit.MINUTES)
-                .build(key -> key);
+                .build(new CacheLoader<String, String>() {
+                    @Override
+                    public String load(String key) throws Exception {
+                        return key;
+                    }
+                });
     }
 
     @VisibleForTesting
@@ -361,7 +367,13 @@ public class TransactionEventsService extends AbstractService implements EventSe
      * of any single metric name is kept in memory.
      */
     private String getMetricName(TransactionData transactionData) {
-        return transactionNameCache.get(transactionData.getBlameOrRootMetricName());
+        String metricName = transactionData.getBlameOrRootMetricName();
+        try {
+            metricName = transactionNameCache.get(metricName);
+        } catch (ExecutionException e) {
+            Agent.LOG.finest("Error fetching cached transaction name: " + e.toString());
+        }
+        return metricName;
     }
 
     // public for testing purposes
